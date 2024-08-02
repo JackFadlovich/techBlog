@@ -1,3 +1,4 @@
+
 //gets other models
 const User = require('./User');
 const Comment = require('./comment');
@@ -31,3 +32,5 @@ Comment.belongsTo(Post, {
 });
 
 module.exports = { User, Comment, Post };
+
+
