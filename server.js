@@ -1,48 +1,51 @@
-const path = require('path');
-const express = require('express');
-const session = require('express-session');
-const exphbs = require('express-handlebars');
-const routes = require('./controllers');
-const sequelize = require('./config/connection');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
-const helpers = require('./utils/helpers.js');
+const express = require("express");
+const session = require("express-session");
+const SequelizeStore = require("connect-session-sequelize")(session.Store);
+const path = require("path");
+const routes = require("./controllers/index");
+const handlebars = require("express-handlebars");
+const { sequelize } = require("./config/connection");
 
+const authMiddleware = require("./middleware/auth");
+
+// Initialize express app
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
-const sess = {
-  secret: 'secret',
-  cookie: {
-    maxAge: 300000,
-    httpOnly: true,
-    secure: false,
-    sameSite: 'strict',
-  },
-  resave: false,
-  saveUninitialized: true,
-  store: new SequelizeStore({
-    db: sequelize,
-  }),
-};
+// Set up Handlebars.js as the template engine
+app.engine("handlebars", handlebars({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 
-app.use(session(sess));
-
-// Set up Handlebars.js engine with custom helpers
-const hbs = exphbs.create({ helpers });
-
-// Inform Express.js on which template engine to use
-app.engine('handlebars', hbs.engine);
-app.set('view engine', 'handlebars');
-
-// Middleware
+// Middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
-// Use the routes defined in controllers
-app.use(routes);
+app.use(express.static(path.join(__dirname, "public")));
+
+// Set up session middleware with Sequelize store
+const sessionStore = new SequelizeStore({
+  db: sequelize,
+});
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "I-Cant-Say", 
+    resave: false,
+    saveUninitialized: true,
+    store: sessionStore,
+    cookie: {
+      maxAge: 1000 * 100 * 100, 
+    },
+  })
+);
+
+// Apply authentication middleware
+app.use(authMiddleware);
+
+// Set up routes
+app.use("/", routes);
 
 sequelize.sync().then(() => {
   app.listen(PORT, () => {
-    console.log(`Server started`);
+    console.log(`Server is running on http://localhost:${PORT}`);
   });
 });

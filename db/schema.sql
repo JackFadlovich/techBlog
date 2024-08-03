@@ -1,2 +1,2 @@
-DROP DATABASE IF EXISTS ecommerse_db;
-CREATE DATABASE ecommerse_db;
+DROP DATABASE IF EXISTS posts_db;
+CREATE DATABASE posts_db;
