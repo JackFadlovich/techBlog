@@ -1,4 +1,4 @@
-
+const sequelize = require("../config/connection");
 //gets other models
 const User = require("./User");
 const Comment = require("./comment");
