@@ -1,33 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="/styles/main.css">
-</head>
-<body>
-    <div class="dashboard-container">
-        <h1>Dashboard</h1>
-        <form action="/dashboard/create" method="POST">
-            <input type="text" name="title" placeholder="Title" required>
-            <textarea name="content" placeholder="Content" required></textarea>
-            <button type="submit">Create Post</button>
-        </form>
-        
-        {{#if blogPosts.length}}
-            <h2>Your Posts:</h2>
-            {{#each blogPosts}}
-                <div class="post">
-                    <h2>{{this.title}}</h2>
-                    <p>{{this.content}}</p>
-                </div>
-            {{/each}}
-        {{else}}
-            <p>No posts yet.</p>
-        {{/if}}
-
-        <a href="/logout">Logout</a>
-    </div>
-</body>
-</html>
+{{!-- Extends the main layout --}}
+{{#extend 'main'}}
+  {{#content 'body'}}
+    <h1>Dashboard</h1>
+    <section id="user-posts">
+      <h2>Your Posts</h2>
+      {{#each userPosts}}
+        <article>
+          <h2>{{this.title}}</h2>
+          <p>{{this.text}}</p>
+          <small>Posted on {{formatDate this.date}}</small>
+          <a href="/posts/edit/{{this.id}}">Edit</a>
+          <form action="/posts/delete/{{this.id}}" method="POST">
+            <button type="submit">Delete</button>
+          </form>
+        </article>
+      {{/each}}
+    </section>
+    <section id="new-post">
+      <h2>Create New Post</h2>
+      <form action="/posts/create" method="POST">
+        <div>
+          <label for="title">Title:</label>
+          <input type="text" id="title" name="title" required>
+        </div>
+        <div>
+          <label for="text">Content:</label>
+          <textarea id="text" name="text" required></textarea>
+        </div>
+        <button type="submit">Create</button>
+      </form>
+    </section>
+  {{/content}}
+{{/extend}}

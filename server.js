@@ -3,7 +3,7 @@ const session = require("express-session");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const path = require("path");
 const routes = require("./controllers/index");
-const  sequelize  = require("./config/connection");
+const sequelize  = require("./config/connection");
 const exphbs = require('express-handlebars');
 
 const authMiddleware = require("./middleware/auth");
@@ -42,13 +42,12 @@ const sessionStore = new SequelizeStore({
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "I-Cant-Say", 
+    secret: process.env.SESSION_SECRET || "I-Cant-Say",
     resave: false,
     saveUninitialized: true,
-    store: sessionStore,
-    cookie: {
-      maxAge: 1000 * 100 * 100, 
-    },
+    store: new SequelizeStore({
+      db: sequelize,
+    }),
   })
 );
 
