@@ -5,8 +5,9 @@ const authMiddleware = require("../middleware/auth");
 router.post("/", authMiddleware, async (req, res) => {
   try {
     const { postId, content } = req.body;
-    await Comment.create({ content, postId, userId: req.session.user_id });
-    res.redirect(`/posts/${postId}`);
+    const dateCreated = new Date();
+    await Comment.create({ content, postId, userId: req.session.user_id , dateCreated });
+    //res.redirect(`/posts/${postId}`);
   } catch (err) {
     res.status(500).json(err);
   }});

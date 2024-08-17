@@ -1,13 +1,13 @@
 {{!-- Extending main layout --}}
-{{#extend "main"}}
-  {{#content "body"}}
+{{!-- {{#extend "main"}}
+  {{#content "body"}} --}}
   <h1>Welcome to the Blog</h1>
   {{#each posts}}
     <div class="post">
       <h2>{{this.title}}</h2>
-      <p>{{this.text}}</p>
-      <p><small>Posted on {{formatDate this.createdAt}}</small></p>
+      {{!-- <p>{{this.text}}</p> --}}
+      <p><small>Posted on {{formatDate this.date}}</small></p>
     </div>
   {{/each}}
-  {{/content}}
-{{/extend}}
+  {{!-- {{/content}}
+{{/extend}} --}}

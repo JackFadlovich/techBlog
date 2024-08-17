@@ -2,6 +2,18 @@ const router = require("express").Router();
 const { Post, Comment } = require("../models");
 const authMiddleware = require("../middleware/auth");
 
+
+router.post("/new", authMiddleware, async (req, res) => {
+  try {
+    const { title, text } = req.body;
+    const newPost =await Post.create({ title, text, userId: req.session.user_id });
+    //res.redirect("/dashboard");
+    res.json(newPost)
+  } catch (err) {
+    res.status(500).json(err);
+  }});
+
+
 router.get("/:id", async (req, res) => {
   try {
     const post = await Post.findByPk(req.params.id, {
@@ -12,17 +24,5 @@ router.get("/:id", async (req, res) => {
     res.status(500).json(err);
   }});
 
-router.post("/:id/comments", authMiddleware, async (req, res) => {
-  try {
-    const { content } = req.body;
-    await Comment.create({
-      content,
-      postId: req.params.id,
-      userId: req.session.user_id,
-    });
-    res.redirect(`/posts/${req.params.id}`);
-  } catch (err) {
-    res.status(500).json(err);
-  }});
 
 module.exports = router;

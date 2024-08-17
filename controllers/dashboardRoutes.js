@@ -11,13 +11,6 @@ router.get("/", authMiddleware, async (req, res) => {
     res.status(500).json(err);
   }});
 
-router.post("/new", authMiddleware, async (req, res) => {
-  try {
-    const { title, content } = req.body;
-    await Post.create({ title, content, userId: req.session.user_id });
-    res.redirect("/dashboard");
-  } catch (err) {
-    res.status(500).json(err);
-  }});
+
 
 module.exports = router;

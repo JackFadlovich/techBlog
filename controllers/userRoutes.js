@@ -6,10 +6,11 @@ const authMiddleware = require("../middleware/auth");
 router.post("/signup", async (req, res) => {
   try {
     const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ username, password: hashedPassword });
+    //const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await User.create({ username, password });
     req.session.user_id = user.id;
-    res.redirect("/");
+    //res.redirect("/");
+    res.json({message: "signed up"})
   } catch (err) {
     res.status(500).json(err);
   }
@@ -21,7 +22,8 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ where: { username } });
     if (user && await bcrypt.compare(password, user.password)) {
       req.session.user_id = user.id;
-      res.redirect("/");
+      //res.redirect("/");
+      res.json({message: "logged in"})
     } else {
       res.status(400).json({ message: "Invalid credentials" });
     }

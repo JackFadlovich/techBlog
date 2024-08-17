@@ -52,7 +52,7 @@ app.use(
 );
 
 // Apply authentication middleware
-app.use(authMiddleware);
+//app.use(authMiddleware);
 
 // Set up routes
 app.use("/", routes);
